@@ -30,7 +30,6 @@ function Show-Menu
     Write-Host "1: Create DKIM CSV File"
     Write-Host "2: Test DKIM DNS"
     Write-Host "3: Enable DKIM"
-    Write-Host "H: Get Show-Help"
     Write-Host "Q: Press 'Q' to quit."
 }
 
@@ -130,10 +129,6 @@ function Enable-DKIM-doit{
     write-host "Enabling DKIM for domain: $domain"
     Set-dkimsigningconfig -identity $domain -enabled $true
 } ## Enable-DKIM-doit
-
-function Show-Help{
-write-host "Help...."
-}
 
 do
  {
