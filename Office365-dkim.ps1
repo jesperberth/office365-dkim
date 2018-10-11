@@ -22,9 +22,11 @@ function Show-Menu
     Write-Host "1: Create DKIM CSV File"
     Write-Host "2: Test DKIM DNS"
     Write-Host "3: Enable DKIM"
+    Write-Host "==============================="
     Write-Host "L: Login to Office 365"
     Write-Host "X: Logout off Office 365"
     Write-Host "Q: Press 'Q' to quit."
+    Write-Host "==============================="
 }
 function Login{
     
