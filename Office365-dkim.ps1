@@ -6,33 +6,43 @@
 # Author: Jesper Berth, Arrow ECS, jesper.berth@arrow.com - 9. October 2018
 # Version 1.0.1
 
-$UserCredential = Get-Credential
-
-#Connect-azuread -Credential $UserCredential
-#Connect-MsolService -Credential $UserCredential
-$Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
-
-Import-PSSession $Session -DisableNameChecking
-
 $createdate = get-date -Format ddMMyyyyhhmmss
 $DesktopPath = [Environment]::GetFolderPath("Desktop")
 $outfile = "$DesktopPath\dkim-DNS-$createdate.csv"
 $topline = "domain,hostname,cname"
+#$id = "3"
 
 function Show-Menu
 {
     param (
         [string]$Title = 'Office 365 DKIM'
     )
-    #Clear-Host
-    Write-Host "=========== $Title ============"
-    Write-Host "`n"   
-    Write-Host "1: Create DKIM CSV File"
+    Clear-Host
+    Write-Host "=========== $Title ============`n"
+    Write-Host "1: Create DKIM CSV File"
     Write-Host "2: Test DKIM DNS"
     Write-Host "3: Enable DKIM"
+    Write-Host "L: Login to Office 365"
+    Write-Host "X: Logout off Office 365"
     Write-Host "Q: Press 'Q' to quit."
 }
+function Login{
+    
+    $UserCredential = Get-Credential
+    $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
+    Import-PSSession $Session -DisableNameChecking
+    $id = $Session.id
+    #Connect-azuread -Credential $UserCredential
+    #Connect-MsolService -Credential $UserCredential
+    Return $id
+}
 
+function Logout{
+    write-host "Logout Office 365 Powershell"
+    $session = get-pssession
+    $id = $session.id
+    Remove-PSSession -id $id
+}
 function Add-DKIM-DNS-CSV{
 
 $dkim = Get-DkimSigningConfig 
@@ -106,8 +116,6 @@ $dkim = Get-DkimSigningConfig
 
     For ($i=0; $i  -lt $dkim.length; $i++){
     $domain = $dkim[$i].domain
-    #$cname1 = $dkim[$i].Selector1Cname
-    #$cname2 = $dkim[$i].Selector2Cname
     $enabled = $dkim[$i].enabled
 
         if ($enabled -eq $false){
@@ -145,10 +153,13 @@ do
          } '3' {
              Clear-Host
              Enable-DKIM
-         }'H' {
+         }'L' {
              Clear-Host
-             Show-Help
-         }
+             Login
+         }'X' {
+             Clear-Host
+             Logout
+      }
      }
      pause
  }
