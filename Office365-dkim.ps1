@@ -33,10 +33,10 @@ function Login{
     $UserCredential = Get-Credential
     $Session = New-PSSession -ConfigurationName Microsoft.Exchange -ConnectionUri https://outlook.office365.com/powershell-liveid/ -Credential $UserCredential -Authentication Basic -AllowRedirection
     Import-PSSession $Session -DisableNameChecking
-    $id = $Session.id
     #Connect-azuread -Credential $UserCredential
     #Connect-MsolService -Credential $UserCredential
-    Return $id
+    Clear-Host
+    write-host -ForegroundColor Green "Logon granted.."
 }
 
 function Logout{
@@ -78,12 +78,14 @@ function Test-DKIM-DNS{
             $domain = $dkim[$i].domain
             $cname1 = $dkim[$i].Selector1Cname
             $cname2 = $dkim[$i].Selector2Cname
-            #$enabled = $dkim[$i].enabled
             $hostname1 = "selector1._domainkey."+"$domain"
             $hostname2 = "selector2._domainkey."+"$domain"
+
+        if($domain.Contains("onmicrosoft.com") -eq $false ){
+            write-host "Resolving domain: $domain"
                 try
                 {
-                $name1 = Resolve-DnsName -Type CNAME $hostname1
+                $name1 = Resolve-DnsName -Type CNAME $hostname1 -ErrorAction SilentlyContinue
                 }
                 Catch
                 {
@@ -91,7 +93,7 @@ function Test-DKIM-DNS{
                 }
                 try
                 {
-                $name2 = Resolve-DnsName -Type CNAME $hostname2
+                $name2 = Resolve-DnsName -Type CNAME $hostname2 -ErrorAction SilentlyContinue
                 }
                 catch
                 {
@@ -109,7 +111,7 @@ function Test-DKIM-DNS{
             else {
             Write-Host -ForegroundColor Red "CNAME 2 for DKIM Not resolveble: $cname2"
             }
-        
+        }# Check Domain
     }
 }
 function Enable-DKIM{
