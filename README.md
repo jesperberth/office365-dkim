@@ -17,7 +17,18 @@ Enable DKIM
 
 ### Create DKIM CSV File
 
-Use CSV file for DNS creations
+CSV file will show needed changes to your Public DNS
+
 First part = domainname
+
 Second part = Hostname to add
+
 Third part = cname to match
+
+example:
+
+```csv
+domain,hostname,cname
+domain.com,selector1._domainkey,selector1-domain-com._domainkey.domain-com.onmicrosoft.com
+domain.com,selector2._domainkey,selector2-domain-com._domainkey.domain-com.onmicrosoft.com
+```
