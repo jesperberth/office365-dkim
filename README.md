@@ -16,3 +16,8 @@ Enable DKIM
 3: Enable DKIM
 
 ### Create DKIM CSV File
+
+Use CSV file for DNS creations
+First part = domainname
+Second part = Hostname to add
+Third part = cname to match
